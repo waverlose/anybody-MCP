@@ -1,126 +1,62 @@
-# AnyBody Automation
+# MCP-for-anybody
 
-Minimal local automation and MCP bridge for `AnyBody Modeling System` on this machine.
+`MCP-for-anybody` lets an AI agent use `AnyBody Modeling System` without opening the GUI.
+
+It can:
+
+- create a local AnyBody project copy
+- run `AnyBodyCon.exe`
+- extract result objects
+- calculate simple summaries such as bilateral knee reaction forces
+
+This repository is a **first working version** focused on local Windows usage.
+
+## Who this is for
+
+If you are new to MCP or AnyBody, start here.
+
+You do **not** need to understand the full codebase to try it.
 
 ## What is included
 
-- `src/anybody_runner.py`: Python wrapper around `AnyBodyCon.exe`
-- `scripts/run_anybody.py`: simple CLI entrypoint
-- `src/anybody_mcp_server.py`: MCP server exposing AnyBody tools
-- `.venv/`: isolated Python environment for MCP runtime
-- `template/`: standard project metadata and layout notes
-- `start-anybody-mcp.bat`: one-click MCP server launcher
-- `mcp-config.anybody.json`: ready-to-copy MCP configuration example
-- `DELIVERY.md`: final handoff summary
+- `src/anybody_mcp_server.py`: MCP server
+- `src/anybody_runner.py`: local AnyBody automation helpers
+- `scripts/run_no_gui_workflow.py`: no-GUI gait example
+- `scripts/run_new_posture_workflow.py`: no-GUI new-posture example
+- `start-anybody-mcp.bat`: one-click local server launcher
+- `mcp-config.anybody.json`: example MCP client config
+- `anybody-mcp-workflow.png`: workflow diagram
 
-## Verified local paths
+## Requirements
 
-- `C:\Program Files\AnyBody Technology\AnyBody.7.3\AnyBodyCon.exe`
-- `C:\Program Files\AnyBody Technology\AnyBody.7.3\AMMR\Tools\Templates\Human Standing\Human Standing.main.any`
+This version assumes:
 
-## CLI examples
+1. Windows
+2. AnyBody is installed locally
+3. `AnyBodyCon.exe` exists at:
+   - `C:\Program Files\AnyBody Technology\AnyBody.7.3\AnyBodyCon.exe`
 
-Run the verified standing example:
+## Quick Start
 
-```powershell
-D:\Python projects\anybody-automation\.venv\Scripts\python.exe "D:\Python projects\anybody-automation\scripts\run_anybody.py" --default-standing
-```
+### 1. Start the MCP server
 
-Run a specific model and operation:
+Double-click:
 
-```powershell
-D:\Python projects\anybody-automation\.venv\Scripts\python.exe "D:\Python projects\anybody-automation\scripts\run_anybody.py" --model "C:\path\to\model.main.any" --command "operation Main.RunApplication" --command run --json
-```
+- `start-anybody-mcp.bat`
 
-Run a full no-GUI gait workflow and output knee force summary:
-
-```powershell
-D:\Python projects\anybody-automation\.venv\Scripts\python.exe "D:\Python projects\anybody-automation\scripts\run_no_gui_workflow.py" --project-dir "D:\Python projects\anybody-automation\workspace\auto-gait-run" --overwrite
-```
-
-Run a full no-GUI new-posture workflow:
-
-```powershell
-D:\Python projects\anybody-automation\.venv\Scripts\python.exe "D:\Python projects\anybody-automation\scripts\run_new_posture_workflow.py" --project-dir "D:\Python projects\anybody-automation\workspace\auto-posture-run" --preset "forward-lean" --overwrite
-```
-
-## MCP server
-
-The project now includes an isolated Python environment at:
-
-- `D:\Python projects\anybody-automation\.venv\Scripts\python.exe`
-
-Start the server:
-
-```powershell
-D:\Python projects\anybody-automation\.venv\Scripts\python.exe "D:\Python projects\anybody-automation\src\anybody_mcp_server.py"
-```
-
-## Exposed MCP tools
-
-- `get_installation_info`
-- `run_default_example`
-- `run_model`
-- `write_run_result`
-- `inspect_project`
-- `create_project`
-- `create_named_project`
-- `apply_named_posture_preset`
-- `read_project_file`
-- `replace_in_project_file`
-- `print_model_object`
-- `get_model_object_value`
-- `get_model_object_value_after_operation`
-- `summarize_knee_force`
-- `summarize_bilateral_knee_forces`
-- `run_no_gui_gait_knee_force_workflow`
-- `run_no_gui_new_posture_workflow`
-
-## Standard project workflow
-
-1. Create a writable local project copy with `create_project`
-2. Scan the project with `inspect_project`
-3. Read and edit `.any` files with `read_project_file` and `replace_in_project_file`
-4. Run the main model with `run_model`
-5. Extract values with `print_model_object`
-6. Parse and summarize forces with `get_model_object_value` or `summarize_bilateral_knee_forces`
-
-## No-GUI workflow
-
-If your goal is to avoid AnyBody GUI entirely, start with the built-in high-level workflow:
-
-1. Call `run_no_gui_gait_knee_force_workflow`
-2. It will create a fresh `gait-vaughan` project copy
-3. It will run the model through `AnyBodyCon`
-4. It will extract bilateral knee reaction forces
-5. It will save a JSON report to the project's `Output` directory
-
-This is the current best demonstration of "AI writes/runs/extracts results without opening GUI".
-
-For new states not already present in AnyBody examples, start with posture presets such as:
-
-- `forward-lean`
-- `mild-squat`
-- `staggered-stance`
-
-These are applied to the `human-standing` template and will automatically retry a milder fallback preset if the first posture does not solve.
-
-## Ready GUI demo
-
-You already have one stable, successful, GUI-openable motion example:
-
-- Project: `D:\Python projects\anybody-automation\workspace\gui-gait-demo\GaitVaughan.main.any`
-- Saved output: `D:\Python projects\anybody-automation\workspace\gui-gait-demo\Output\GaitVaughan.main.anydata.h5`
-
-This project loads in AnyBody GUI and has already been run successfully with inverse dynamics and saved output.
-
-## One-click server start
+Or run:
 
 ```powershell
 D:\Python projects\anybody-automation\start-anybody-mcp.bat
 ```
 
-## Suggested MCP config
+### 2. Add this server to your MCP client
+
+Use the example config in:
+
+- `mcp-config.anybody.json`
+
+Its core content is:
 
 ```json
 {
@@ -134,3 +70,94 @@ D:\Python projects\anybody-automation\start-anybody-mcp.bat
   }
 }
 ```
+
+### 3. First test
+
+After your MCP client connects, call:
+
+- `get_installation_info`
+
+If that works, the server is connected correctly.
+
+## Easiest demo
+
+The simplest no-GUI demo is the gait workflow.
+
+Run:
+
+```powershell
+D:\Python projects\anybody-automation\.venv\Scripts\python.exe "D:\Python projects\anybody-automation\scripts\run_no_gui_workflow.py" --project-dir "D:\Python projects\anybody-automation\workspace\auto-gait-run" --overwrite
+```
+
+This will:
+
+1. create a local gait project
+2. run it with `AnyBodyCon`
+3. extract left/right knee reaction forces
+4. write a JSON report
+
+Expected report:
+
+- `workspace\auto-gait-run\Output\knee-force-summary.json`
+
+## New posture demo
+
+You can also test a new posture without GUI.
+
+Example:
+
+```powershell
+D:\Python projects\anybody-automation\.venv\Scripts\python.exe "D:\Python projects\anybody-automation\scripts\run_new_posture_workflow.py" --project-dir "D:\Python projects\anybody-automation\workspace\auto-posture-run" --preset "forward-lean" --overwrite
+```
+
+Current built-in posture presets:
+
+- `forward-lean`
+- `mild-squat`
+- `staggered-stance`
+
+## Main MCP tools
+
+Useful beginner tools:
+
+- `get_installation_info`
+- `create_named_project`
+- `run_model`
+- `get_model_object_value_after_operation`
+- `summarize_bilateral_knee_forces`
+- `run_no_gui_gait_knee_force_workflow`
+- `run_no_gui_new_posture_workflow`
+
+## Successful GUI-openable example
+
+If you still want a reference project for manual inspection in AnyBody GUI, use:
+
+- `workspace\gui-gait-demo\GaitVaughan.main.any`
+
+Saved output file:
+
+- `workspace\gui-gait-demo\Output\GaitVaughan.main.anydata.h5`
+
+## Files for advanced users
+
+If you want more implementation details, see:
+
+- `DELIVERY.md`
+- `src/anybody_runner.py`
+- `src/anybody_mcp_server.py`
+
+## Current scope
+
+This first version is best at:
+
+- running existing AnyBody examples without GUI
+- creating simple new quasi-static postures
+- extracting result objects automatically
+
+It is **not yet** a full automatic solver for every brand-new complex motion.
+
+## Workflow Diagram
+
+See:
+
+- `anybody-mcp-workflow.png`
