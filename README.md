@@ -2,6 +2,8 @@
 
 `MCP-for-anybody` lets an AI agent use `AnyBody Modeling System` without opening the GUI.
 
+![AnyBody MCP Workflow](./anybody-mcp-workflow.png)
+
 It can:
 
 - create a local AnyBody project copy
