@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.pyc
+flowchart_response.json
+flowchart_request.json
+workspace/
+*.anydata.h5
+*.json.tmp

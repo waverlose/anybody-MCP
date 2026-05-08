@@ -1,0 +1,6 @@
+{
+  "name": "human-standing-project",
+  "main_file": "Human Standing.main.any",
+  "default_operation": "Main.RunApplication",
+  "notes": "Copy of the verified Human Standing AnyBody template for AI-driven editing and execution."
+}
