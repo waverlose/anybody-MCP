@@ -1,0 +1,7 @@
+{
+  "workflow": "full-chain",
+  "project_dir": "D:\\Python projects\\anybody-automation\\workspace\\full-chain-run",
+  "model": "Human Standing.main.any",
+  "overwrite": true,
+  "timeout": 300
+}

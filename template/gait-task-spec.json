@@ -1,0 +1,6 @@
+{
+  "workflow": "gait-knee-force",
+  "project_dir": "D:\\Python projects\\anybody-automation\\workspace\\spec-gait-run",
+  "overwrite": true,
+  "timeout": 900
+}

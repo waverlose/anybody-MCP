@@ -1,0 +1,10 @@
+{
+  "workflow": "parametric-sweep",
+  "project_dir": "D:\\Python projects\\anybody-automation\\workspace\\parametric-sweep",
+  "output_dir": "D:\\Python projects\\anybody-automation\\workspace\\sweep-results",
+  "trunk_angles": [0, 5, 10, 15],
+  "knee_angles": [4, 15, 25, 35],
+  "loads_kg": [0, 5, 10, 15],
+  "timeout": 300,
+  "overwrite": true
+}

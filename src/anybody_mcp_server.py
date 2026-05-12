@@ -13,7 +13,9 @@ if str(PROJECT_ROOT) not in sys.path:
 from mcp.server.fastmcp import FastMCP
 
 from src.anybody_runner import (
+    apply_hand_load,
     apply_posture_preset,
+    apply_state_description,
     DEFAULT_ANYBODYCON,
     DEFAULT_HUMAN_STANDING,
     create_project_from_named_template,
@@ -22,14 +24,24 @@ from src.anybody_runner import (
     extract_object_value_after_operation,
     no_gui_gait_knee_force_workflow,
     no_gui_new_posture_workflow,
+    no_gui_state_workflow,
     print_object,
     read_text_file,
     replace_text_in_file,
+    run_full_chain_parametric_sweep,
+    run_task_spec,
+    run_task_spec_file,
     run_default_standing_model,
     run_macro,
     scan_project,
+    summarize_ankle_reaction_force,
+    summarize_bilateral_ankle_reaction_forces,
+    summarize_bilateral_hip_reaction_forces,
     summarize_bilateral_knee_reaction_forces,
+    summarize_full_chain_joint_forces,
+    summarize_hip_reaction_force,
     summarize_knee_reaction_force,
+    summarize_l5s1_compression,
 )
 
 
@@ -115,6 +127,12 @@ def apply_named_posture_preset(project_dir: str, preset_name: str) -> dict:
 
 
 @mcp.tool()
+def apply_state_to_project(project_dir: str, state: dict) -> dict:
+    """Apply a structured state description directly to a Human Standing project."""
+    return apply_state_description(project_dir=project_dir, state=state)
+
+
+@mcp.tool()
 def read_project_file(file_path: str) -> dict:
     """Read a text file from an AnyBody project."""
     return read_text_file(file_path)
@@ -167,6 +185,94 @@ def run_no_gui_gait_knee_force_workflow(project_dir: str, overwrite: bool = Fals
 def run_no_gui_new_posture_workflow(project_dir: str, preset_name: str, overwrite: bool = False) -> dict:
     """Create a standing project, apply a new posture preset, retry if needed, and output a JSON report."""
     return no_gui_new_posture_workflow(project_dir=project_dir, preset_name=preset_name, overwrite=overwrite)
+
+
+@mcp.tool()
+def run_no_gui_state_workflow(project_dir: str, state: dict, overwrite: bool = False) -> dict:
+    """Create a standing project from a structured state description, retry if needed, and output a JSON report."""
+    return no_gui_state_workflow(project_dir=project_dir, state=state, overwrite=overwrite)
+
+
+@mcp.tool()
+def run_task_spec_workflow(spec: dict) -> dict:
+    """Run a lightweight task spec dictionary without opening GUI."""
+    return run_task_spec(spec)
+
+
+@mcp.tool()
+def run_task_spec_file_workflow(spec_file: str) -> dict:
+    """Run a lightweight task spec JSON file without opening GUI."""
+    return run_task_spec_file(spec_file)
+
+
+# ---- New joint extraction tools ----
+
+@mcp.tool()
+def get_hip_force(model: str, side: str = "Right") -> dict:
+    """Run the model and return parsed hip joint reaction force (RefFrameOutput.F)."""
+    return summarize_hip_reaction_force(model=model, side=side)
+
+
+@mcp.tool()
+def get_ankle_force(model: str, side: str = "Right") -> dict:
+    """Run the model and return parsed ankle joint reaction force (RefFrameOutput.F)."""
+    return summarize_ankle_reaction_force(model=model, side=side)
+
+
+@mcp.tool()
+def get_bilateral_hip_forces(model: str) -> dict:
+    """Run the model and return left/right hip reaction forces."""
+    return summarize_bilateral_hip_reaction_forces(model=model)
+
+
+@mcp.tool()
+def get_bilateral_ankle_forces(model: str) -> dict:
+    """Run the model and return left/right ankle reaction forces."""
+    return summarize_bilateral_ankle_reaction_forces(model=model)
+
+
+@mcp.tool()
+def get_l5s1_compression(model: str) -> dict:
+    """Run the model and return L5/S1 spinal compression force from Fout."""
+    return summarize_l5s1_compression(model=model)
+
+
+@mcp.tool()
+def get_full_chain_joint_forces(model: str) -> dict:
+    """Run the model once and extract all 4 joints (L5/S1, hip, knee, ankle) simultaneously."""
+    return summarize_full_chain_joint_forces(model=model)
+
+
+# ---- New load application tool ----
+
+@mcp.tool()
+def add_hand_load(project_dir: str, load_kg: float) -> dict:
+    """Apply bilateral hand loads (AnyForce3D on PalmJoint) to a Human Standing project. Specify load per hand in kg."""
+    return apply_hand_load(project_dir=project_dir, load_kg=load_kg)
+
+
+# ---- New parametric sweep tool ----
+
+@mcp.tool()
+def run_parametric_sweep(
+    project_dir: str,
+    trunk_angles: list[float],
+    knee_angles: list[float],
+    loads_kg: list[float],
+    output_dir: str | None = None,
+    timeout: int = 300,
+) -> dict:
+    """Run a parametric sweep across trunk/knee/load combinations, extracting full-chain joint forces.
+    Returns summary statistics and saves full results as JSON.
+    """
+    return run_full_chain_parametric_sweep(
+        project_dir=project_dir,
+        trunk_angles=trunk_angles,
+        knee_angles=knee_angles,
+        loads_kg=loads_kg,
+        output_dir=output_dir,
+        timeout=timeout,
+    )
 
 
 def main() -> None:

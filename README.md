@@ -25,6 +25,8 @@ You do **not** need to understand the full codebase to try it.
 - `src/anybody_runner.py`: local AnyBody automation helpers
 - `scripts/run_no_gui_workflow.py`: no-GUI gait example
 - `scripts/run_new_posture_workflow.py`: no-GUI new-posture example
+- `scripts/run_state_workflow.py`: no-GUI structured state example
+- `scripts/run_task_spec.py`: one-file task spec runner
 - `start-anybody-mcp.bat`: one-click local server launcher
 - `mcp-config.anybody.json`: example MCP client config
 - `anybody-mcp-workflow.png`: workflow diagram
@@ -118,17 +120,67 @@ Current built-in posture presets:
 - `mild-squat`
 - `staggered-stance`
 
-## Main MCP tools
+## Structured state demo
 
-Useful beginner tools:
+If you do not want to rely only on built-in presets, you can pass a structured state directly:
 
+```powershell
+D:\Python projects\anybody-automation\.venv\Scripts\python.exe "D:\Python projects\anybody-automation\scripts\run_state_workflow.py" --project-dir "D:\Python projects\anybody-automation\workspace\auto-state-run" --state-file "D:\Python projects\anybody-automation\template\example-state.json" --overwrite
+```
+
+This is the direction for future development: AI generates the state, not just a preset name.
+
+## Lightweight task spec mode
+
+For the best balance of speed and simplicity, use a single JSON task file.
+
+Run:
+
+```powershell
+D:\Python projects\anybody-automation\.venv\Scripts\python.exe "D:\Python projects\anybody-automation\scripts\run_task_spec.py" --spec-file "D:\Python projects\anybody-automation\template\state-task-spec.json"
+```
+
+Included examples:
+
+- `template\gait-task-spec.json`
+- `template\state-task-spec.json`
+
+This is now the lightest recommended interface for AI-driven no-GUI runs.
+
+## Main MCP tools (29 tools)
+
+### Basic
 - `get_installation_info`
 - `create_named_project`
 - `run_model`
 - `get_model_object_value_after_operation`
-- `summarize_bilateral_knee_forces`
+
+### Joint extraction
+- `summarize_knee_force` / `summarize_bilateral_knee_forces`
+- `get_hip_force` / `get_bilateral_hip_forces`
+- `get_ankle_force` / `get_bilateral_ankle_forces`
+- `get_l5s1_compression` (spinal compression, Fout)
+- `get_full_chain_joint_forces` (all 4 joints in one run)
+
+### Load application
+- `add_hand_load` (AnyForce3D on PalmJoint, bilateral)
+
+### Parametric sweep
+- `run_parametric_sweep`
+
+### Workflows
 - `run_no_gui_gait_knee_force_workflow`
 - `run_no_gui_new_posture_workflow`
+- `run_no_gui_state_workflow`
+- `run_task_spec_workflow` / `run_task_spec_file_workflow`
+
+## Full ready-to-use example
+
+A full 64-case parametric sweep (4 trunk x 4 knee x 4 load) with simultaneous L5/S1, hip, knee, ankle extraction is available at:
+
+`C:\Users\A\Desktop\LiftingPostureResearch\full_chain_sweep.py`
+
+Results: `C:\Users\A\Desktop\LiftingPostureResearch\results\`
 
 ## Successful GUI-openable example
 

@@ -1,0 +1,14 @@
+{
+  "workflow": "state",
+  "project_dir": "D:\\Python projects\\anybody-automation\\workspace\\spec-state-run",
+  "overwrite": true,
+  "timeout": 900,
+  "state": {
+    "pelvis_pos_x": 0.08,
+    "pelvis_pos_y": 0.94,
+    "thorax_extension": 12,
+    "right_knee_flexion": 14,
+    "left_knee_flexion": 14,
+    "analysis_steps": 1
+  }
+}
