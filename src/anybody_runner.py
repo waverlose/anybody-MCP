@@ -172,9 +172,9 @@ def run_macro(
         raise AnyBodyRunnerError(f"Working directory not found: {cwd}")
 
     macro_content = build_macro(model_path, commands)
-    with tempfile.NamedTemporaryFile("w", suffix=".anymcr", delete=False, encoding="utf-8") as handle:
+    fd, macro_path = tempfile.mkstemp(suffix=".anymcr", prefix="anybody_", text=True)
+    with open(fd, "w", encoding="utf-8") as handle:
         handle.write(macro_content)
-        macro_path = Path(handle.name)
 
     command = [str(anybodycon_path), f'--macro={macro_path}', "--noninteractive"]
     try:
@@ -187,7 +187,9 @@ def run_macro(
             check=False,
         )
     finally:
-        pass
+        try:
+            Path(macro_path).unlink(missing_ok=True)
+        except: pass
 
     return RunResult(
         command=command,
