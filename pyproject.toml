@@ -1,0 +1,7 @@
+[tool.pytest.ini_options]
+# Only the maintained suite is collected. tests/*.py at the top level are
+# historical one-off debug scripts that execute on import and drive AnyBody,
+# so they must not be picked up by a plain `pytest` run.
+testpaths = ["tests/unit"]
+python_files = ["test_*.py"]
+addopts = "-q"

@@ -1,9 +1,9 @@
 {
   "mcpServers": {
     "anybody": {
-      "command": "D:\\Python projects\\anybody-automation\\.venv\\Scripts\\python.exe",
+      "command": "C:\\path\\to\\anybody-automation\\.venv\\Scripts\\python.exe",
       "args": [
-        "D:\\Python projects\\anybody-automation\\src\\anybody_mcp_server.py"
+        "C:\\path\\to\\anybody-automation\\src\\anybody_mcp_server.py"
       ]
     }
   }

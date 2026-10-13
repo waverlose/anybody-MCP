@@ -1,8 +1,31 @@
 .venv/
 __pycache__/
 *.pyc
+.pytest_cache/
 flowchart_response.json
 flowchart_request.json
 workspace/
 *.anydata.h5
 *.json.tmp
+
+# ---------------------------------------------------------------------------
+# Private and machine-local files. These exist in the working copy but are not
+# part of the published project: they contain a hardware identifier, local
+# license-server details, personal research notes and local tool settings.
+# ---------------------------------------------------------------------------
+.claude/
+.workbuddy/
+.workbuddy-ai/
+AGENTS.md
+思路.txt
+fix-anybody-license.bat
+fix-anybody-license.ps1
+anybody-automation.lnk
+convert
+
+# Local build and run output
+output/
+
+# Historical one-off debug scripts kept only on the author's machine.
+# The maintained suite is tests/unit/, which is not affected by this rule.
+tests/*.py
